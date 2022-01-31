@@ -1,30 +1,43 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div id="wrapper">
+    <nav class="navbar">
+      <div class="navbar-brand">
+        <router-link to="/" class="navbar-item"><strong>Invoicely</strong></router-link>
+      </div>
+      <div class="navbar-menu">
+        <div class="navbar-end">
+          <template v-if="$store.state.isAuthenticated">
+            <router-link to="/dashboard" class="navbar-item">Dashboard</router-link>
+          </template>
+        </div>
+      </div>
+    </nav>
+    <section class="section">
+      <router-view/>
+    </section>
   </div>
-  <router-view/>
+
+  <footer class="footer">
+    <p class="text">Copyright (c) 2022</p>
+  </footer>
 </template>
+<script>
+  import axios from 'axios'
+  export default{
+    name: 'App',
+    beforeCreate(){
+ 
+    this.$store.commit('initializeStore')    
+    const token = this.$store.state.token
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+    if(token){
+      axios.defaults.headers.common['Authorization'] = "Token"+token
+    }else{
+       axios.defaults.headers.common['Authorization'] = ""
+    }
     }
   }
-}
+</script>
+<style lang="scss">
+
 </style>
